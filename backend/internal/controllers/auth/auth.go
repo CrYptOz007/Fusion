@@ -5,6 +5,7 @@ import (
 
 	"github.com/CrYptOz007/Fusion/internal/helpers"
 	"github.com/CrYptOz007/Fusion/internal/models/user"
+	"github.com/CrYptOz007/Fusion/internal/server/types"
 	"github.com/CrYptOz007/Fusion/internal/server/utils"
 	jwt "github.com/CrYptOz007/Fusion/internal/utils"
 	"gorm.io/gorm"
@@ -31,7 +32,7 @@ func Login(c echo.Context) error {
 	}
 
 	if err := helpers.ComparePassword(dbUser.Password, user.Password); err == false {
-		return c.JSON(401, map[string]string{"error": "password is incorrect"})
+		return c.JSON(http.StatusUnauthorized, types.Response{Error: []string{"invalid password"}})
 	}
 
 	authToken, refreshToken, err := jwt.GenerateTokenPair(dbUser.ID, dbUser.Username)
@@ -40,18 +41,18 @@ func Login(c echo.Context) error {
 	}
 
 	c.SetCookie(&http.Cookie{Name: "refreshToken", Value: refreshToken, HttpOnly: true, Path: "/"})
-	return c.JSON(200, map[string]interface{}{"token": authToken})
+	return c.JSON(http.StatusOK, map[string]string{"token": authToken})
 }
 
 func Refresh(c echo.Context) error {
 	refreshToken, err := c.Cookie("refreshToken")
 	if err != nil {
-		return c.JSON(401, map[string]string{"error": "refresh token is missing"})
+		return c.JSON(http.StatusUnauthorized, types.Response{Error: []string{"refresh token is missing"}})
 	}
 
 	claims, err := jwt.ValidateRefreshToken(refreshToken.Value)
 	if err != nil {
-		return c.JSON(401, map[string]string{"error": "refresh token is invalid"})
+		return c.JSON(http.StatusUnauthorized, types.Response{Error: []string{"refresh token is invalid"}})
 	}
 
 	username := claims["username"].(string)
@@ -59,10 +60,10 @@ func Refresh(c echo.Context) error {
 
 	authToken, err := jwt.GenerateAuthToken(id, username)
 	if err != nil {
-		return c.JSON(401, map[string]string{"error": "refresh token is invalid"})
+		return c.JSON(http.StatusUnauthorized, types.Response{Error: []string{"refresh token is invalid"}})
 	}
 
-	return c.JSON(200, map[string]interface{}{"token": authToken})
+	return c.JSON(http.StatusOK, map[string]interface{}{"token": authToken})
 }
 
 func Logout(c echo.Context) error {
