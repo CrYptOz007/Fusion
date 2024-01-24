@@ -5,6 +5,7 @@ import (
 	"github.com/CrYptOz007/Fusion/internal/controllers/services"
 	"github.com/CrYptOz007/Fusion/internal/controllers/services/proxmox"
 	"github.com/CrYptOz007/Fusion/internal/controllers/user"
+	"github.com/CrYptOz007/Fusion/internal/middlewares"
 	"github.com/CrYptOz007/Fusion/internal/server/types"
 
 	"github.com/labstack/echo/v4"
@@ -13,7 +14,7 @@ import (
 func Register(app *echo.Echo, groups types.Groups) {
 	r := NewRouter(app, groups)
 
-	r.Group("services", nil, func(r *Router) {
+	r.Group("services", middlewares.Protected, func(r *Router) {
 		r.GET("", services.GetServices)
 		r.POST("/create", services.CreateService)
 
