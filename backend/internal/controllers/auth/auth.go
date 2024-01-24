@@ -40,7 +40,7 @@ func Login(c echo.Context) error {
 	}
 
 	c.SetCookie(&http.Cookie{Name: "refreshToken", Value: refreshToken, HttpOnly: true, Path: "/"})
-	return c.JSON(200, map[string]interface{}{"authToken": authToken})
+	return c.JSON(200, map[string]interface{}{"token": authToken})
 }
 
 func Refresh(c echo.Context) error {
@@ -62,5 +62,5 @@ func Refresh(c echo.Context) error {
 		return c.JSON(401, map[string]string{"error": "refresh token is invalid"})
 	}
 
-	return c.JSON(200, map[string]interface{}{"authToken": authToken})
+	return c.JSON(200, map[string]interface{}{"token": authToken})
 }
