@@ -1,0 +1,39 @@
+version: '3.9'
+services:
+  backend:
+    container_name: backend_service
+    build:
+      context: ./backend
+      dockerfile: ./docker/Dockerfile
+    volumes:
+      - ./backend:/var/www/app/backend
+    ports: 
+      - "3000:3000"
+    depends_on:
+      - backend_db
+    
+  backend_db:
+    container_name: backend_db
+    image: mariadb:10.5
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: 1
+      MYSQL_DATABASE: fusion
+    ports:
+      - "9906:3306"
+    volumes:
+      - fusion_maridb_data:/var/lib/mysql
+
+  # frontend:
+  #   container_name: frontend_service
+  #   build:
+  #     context: ./frontend
+  #     dockerfile: ./frontend/docker/Dockerfile
+  #   ports:
+  #     - "4000:4000"
+    
+networks:
+  default:
+    name: fusion
+
+volumes:
+  fusion_maridb_data:
