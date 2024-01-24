@@ -26,6 +26,7 @@ func Register(app *echo.Echo, groups types.Groups) {
 	r.Group("auth", nil, func(r *Router) {
 		r.POST("/login", auth.Login)
 		r.GET("/refresh", auth.Refresh)
+		r.GET("/logout", auth.Logout)
 	})
 
 	r.Group("user", nil, func(r *Router) {

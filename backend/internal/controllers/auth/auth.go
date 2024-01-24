@@ -64,3 +64,8 @@ func Refresh(c echo.Context) error {
 
 	return c.JSON(200, map[string]interface{}{"token": authToken})
 }
+
+func Logout(c echo.Context) error {
+	c.SetCookie(&http.Cookie{Name: "refreshToken", Value: "", HttpOnly: true, Path: "/", MaxAge: -1})
+	return c.JSON(200, map[string]string{"message": "logged out"})
+}
