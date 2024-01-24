@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"github.com/CrYptOz007/Fusion/internal/controllers/auth"
 	"github.com/CrYptOz007/Fusion/internal/controllers/services"
 	"github.com/CrYptOz007/Fusion/internal/controllers/services/proxmox"
 	"github.com/CrYptOz007/Fusion/internal/controllers/user"
@@ -19,6 +20,11 @@ func Register(app *echo.Echo, groups types.Groups) {
 		r.GET("/proxmox/nodes", proxmox.GetNodes)
 		r.GET("/proxmox/virtualmachines", proxmox.GetVirtualMachines)
 		r.GET("/proxmox/containers", proxmox.GetContainers)
+	})
+
+	r.Group("auth", nil, func(r *Router) {
+		r.POST("/login", auth.Login)
+		r.GET("/refresh", auth.Refresh)
 	})
 
 	r.Group("user", nil, func(r *Router) {
