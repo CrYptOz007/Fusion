@@ -2,6 +2,7 @@ package utils
 
 import (
 	"errors"
+	"os"
 	"time"
 
 	"github.com/golang-jwt/jwt"
@@ -12,8 +13,8 @@ const (
 	refreshTokenMaxAge = 2 * 24 * time.Hour
 )
 
-const authKey = "secret"
-const refreshKey = "refresh"
+var authKey = os.Getenv("AUTH_KEY")
+var refreshKey = os.Getenv("REFRESH_KEY")
 
 type Token struct {
 	UserId   uint
