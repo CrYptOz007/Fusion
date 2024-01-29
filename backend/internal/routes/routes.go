@@ -4,6 +4,7 @@ import (
 	"github.com/CrYptOz007/Fusion/internal/controllers/auth"
 	"github.com/CrYptOz007/Fusion/internal/controllers/services"
 	"github.com/CrYptOz007/Fusion/internal/controllers/services/ipmi"
+	"github.com/CrYptOz007/Fusion/internal/controllers/services/pihole"
 	"github.com/CrYptOz007/Fusion/internal/controllers/services/proxmox"
 	"github.com/CrYptOz007/Fusion/internal/controllers/user"
 	"github.com/CrYptOz007/Fusion/internal/middlewares"
@@ -24,6 +25,11 @@ func Register(app *echo.Echo, groups types.Groups) {
 		r.GET("/proxmox/containers", proxmox.GetContainers)
 
 		r.GET("/ipmi/info", ipmi.GetInfo)
+
+		r.GET("/pihole/summary", pihole.GetSummary)
+		r.GET("/pihole/status", pihole.GetStatus)
+		r.GET("/pihole/disable", pihole.Disable)
+		r.GET("/pihole/enable", pihole.Enable)
 	})
 
 	r.Group("auth", nil, func(r *Router) {
