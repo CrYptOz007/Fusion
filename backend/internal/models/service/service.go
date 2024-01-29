@@ -63,23 +63,33 @@ func (s *ServiceDTO) BeforeCreate(db *gorm.DB) (err error) {
 }
 
 func FetchService(id int, db *gorm.DB) (*Service, error) {
-	var service Service
+	var service *Service
 
 	if err := db.Where("ID = ?", id).First(&service).Error; err != nil {
 		return nil, err
 	}
 
-	return &service, nil
-}
-
-func FetchServiceWithUser(id int, db *gorm.DB) (*Service, error) {
-	s, err := FetchService(id, db)
-	if err != nil {
+	if err := db.Preload("User").First(service, "id = ?", id).Error; err != nil {
 		return nil, err
 	}
 
-	if err := db.Preload("User").First(s, "id = ?", id).Error; err != nil {
-		return nil, err
+	if service.ApiKey != "" {
+		var DecryptedApiKey, err = encryption.Decrypt(service.ApiKey, service.User.Password, service.User.Salt)
+		if err != nil {
+			return nil, err
+		}
+
+		service.ApiKey = DecryptedApiKey
 	}
-	return s, nil
+
+	if service.Password != "" {
+		var DecryptedPassword, err = encryption.Decrypt(service.Password, service.User.Password, service.User.Salt)
+		if err != nil {
+			return nil, err
+		}
+
+		service.Password = DecryptedPassword
+	}
+
+	return service, nil
 }

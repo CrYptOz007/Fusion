@@ -37,7 +37,7 @@ func GetNodes(c echo.Context) error {
 	}
 
 	// Get service from database
-	service, err := service.FetchServiceWithUser(parsedId, database)
+	service, err := service.FetchService(parsedId, database)
 	if err != nil {
 		return helpers.ReturnUnexpectedError(c, []string{err.Error()})
 	}
@@ -76,7 +76,7 @@ func GetVirtualMachines(c echo.Context) error {
 	}
 
 	// Get service from database
-	service, err := service.FetchServiceWithUser(parsedId, database)
+	service, err := service.FetchService(parsedId, database)
 	if err != nil {
 		return helpers.ReturnUnexpectedError(c, []string{err.Error()})
 	}
@@ -118,7 +118,7 @@ func GetContainers(c echo.Context) error {
 	}
 
 	// Get service from database
-	service, err := service.FetchServiceWithUser(parsedId, database)
+	service, err := service.FetchService(parsedId, database)
 	if err != nil {
 		return helpers.ReturnUnexpectedError(c, []string{err.Error()})
 	}

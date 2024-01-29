@@ -4,7 +4,6 @@ import (
 	"strconv"
 
 	"github.com/CrYptOz007/Fusion/internal/helpers"
-	encryption "github.com/CrYptOz007/Fusion/internal/helpers"
 	"github.com/CrYptOz007/Fusion/internal/models/service"
 	"github.com/CrYptOz007/Fusion/internal/server/utils"
 	"github.com/CrYptOz007/Fusion/pkg/ipmitool"
@@ -23,17 +22,12 @@ func GetInfo(c echo.Context) error {
 	}
 
 	// Get service from database
-	service, err := service.FetchServiceWithUser(parsedId, database)
+	service, err := service.FetchService(parsedId, database)
 	if err != nil {
 		return helpers.ReturnUnexpectedError(c, []string{err.Error()})
 	}
 
-	password, err := encryption.Decrypt(service.Password, service.User.Password, service.User.Salt)
-	if err != nil {
-		return helpers.ReturnUnexpectedError(c, []string{err.Error()})
-	}
-
-	client, err := ipmitool.NewClient(service.Hostname, uint16(service.Port), service.Username, password)
+	client, err := ipmitool.NewClient(service.Hostname, uint16(service.Port), service.Username, service.Password)
 	if err != nil {
 		return helpers.ReturnUnexpectedError(c, []string{err.Error()})
 	}

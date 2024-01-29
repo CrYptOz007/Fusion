@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"net/http"
 
-	encryption "github.com/CrYptOz007/Fusion/internal/helpers"
 	"github.com/CrYptOz007/Fusion/internal/models/service"
 	"github.com/luthermonson/go-proxmox"
 )
@@ -14,10 +13,7 @@ import (
 func ListNodes(service *service.Service) (proxmox.NodeStatuses, error) {
 
 	tokenID := service.Username
-	secret, err := encryption.Decrypt(service.ApiKey, service.User.Password, service.User.Salt)
-	if err != nil {
-		return nil, err
-	}
+	secret := service.ApiKey
 
 	insecureHTTPClient := http.Client{
 		Transport: &http.Transport{
@@ -41,10 +37,7 @@ func ListNodes(service *service.Service) (proxmox.NodeStatuses, error) {
 func ListVMs(service *service.Service, node string) (proxmox.VirtualMachines, error) {
 
 	tokenID := service.Username
-	secret, err := encryption.Decrypt(service.ApiKey, service.User.Password, service.User.Salt)
-	if err != nil {
-		return nil, err
-	}
+	secret := service.ApiKey
 
 	insecureHTTPClient := http.Client{
 		Transport: &http.Transport{
@@ -73,10 +66,7 @@ func ListVMs(service *service.Service, node string) (proxmox.VirtualMachines, er
 
 func ListContainers(service *service.Service, node string) (proxmox.Containers, error) {
 	tokenID := service.Username
-	secret, err := encryption.Decrypt(service.ApiKey, service.User.Password, service.User.Salt)
-	if err != nil {
-		return nil, err
-	}
+	secret := service.ApiKey
 
 	insecureHTTPClient := http.Client{
 		Transport: &http.Transport{
