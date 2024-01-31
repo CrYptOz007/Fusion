@@ -23,13 +23,15 @@ services:
     volumes:
       - fusion_maridb_data:/var/lib/mysql
 
-  # frontend:
-  #   container_name: frontend_service
-  #   build:
-  #     context: ./frontend
-  #     dockerfile: ./frontend/docker/Dockerfile
-  #   ports:
-  #     - "4000:4000"
+  frontend:
+    container_name: frontend_service
+    build:
+      context: ./frontend
+      dockerfile: ./docker/Dockerfile
+    volumes:
+      - ./frontend:/var/www/app/frontend
+    ports:
+      - "4000:4000"
     
 networks:
   default:
