@@ -3,6 +3,7 @@ package server
 import (
 	"log"
 	"net/http"
+	"os"
 	"sync"
 
 	"github.com/CrYptOz007/Fusion/internal/database"
@@ -36,9 +37,10 @@ func (s *Server) echoInit(wg *sync.WaitGroup) {
 	defer wg.Done()
 
 	s.App.Use(echoMiddleWare.CORSWithConfig(echoMiddleWare.CORSConfig{
-		AllowOrigins: []string{"*"},
+		AllowOrigins: []string{os.Getenv("NGINX_HOST")},
 		AllowHeaders: []string{"Origin", "X-Requested-With", "Content-Type", "Accept", "Authorization", "ResponseType", "Cache-Control"},
 		AllowMethods: []string{http.MethodGet, http.MethodPost, http.MethodPut, http.MethodDelete, http.MethodOptions, http.MethodConnect},
+		AllowCredentials: true,
 	}))
 
 	dbClient := s.DB

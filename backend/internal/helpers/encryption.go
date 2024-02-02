@@ -3,8 +3,10 @@ package helpers
 import (
 	"crypto/aes"
 	"crypto/cipher"
+	"crypto/rand"
 	"crypto/sha256"
 	"encoding/base64"
+	"log"
 
 	"golang.org/x/crypto/pbkdf2"
 )
@@ -56,4 +58,13 @@ func Decrypt(encryptedText, password, salt string) (string, error) {
 	stream.XORKeyStream(plaintext, ciphertext)
 
 	return string(plaintext), nil
+}
+
+func GenerateRandomKey() string {
+	key := make([]byte, 32)
+	_, err := rand.Read(key)
+	if err != nil {
+			log.Fatalf("Failed to generate random key: %s", err)
+	}
+	return base64.StdEncoding.EncodeToString(key)
 }

@@ -7,8 +7,8 @@ import (
 	"os"
 
 	"github.com/CrYptOz007/Fusion/internal/database"
+	"github.com/CrYptOz007/Fusion/internal/helpers"
 	"github.com/CrYptOz007/Fusion/internal/server"
-	"github.com/joho/godotenv"
 )
 
 var environment string
@@ -16,13 +16,7 @@ var environment string
 func init() {
 	environment = os.Getenv("ENVIRONMENT")
 	if environment == "" {
-		environment = "local"
-	}
-	if environment == "local" {
-		err := godotenv.Load(".env")
-		if err != nil {
-			os.Exit(1)
-		}
+		environment = "development"
 		fmt.Println("Running in development mode")
 	}
 }
@@ -34,6 +28,9 @@ func main() {
 	connection := new(database.Connection)
 
 	errors := make(chan error)
+
+	os.Setenv("AUTH_KEY", helpers.GenerateRandomKey())
+	os.Setenv("REFRESH_KEY", helpers.GenerateRandomKey())
 
 	go connection.Init(errors)
 	fmt.Println("Waiting for database connection to be initialized")
