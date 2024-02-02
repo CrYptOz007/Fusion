@@ -37,9 +37,9 @@ func (s *Server) echoInit(wg *sync.WaitGroup) {
 	defer wg.Done()
 
 	s.App.Use(echoMiddleWare.CORSWithConfig(echoMiddleWare.CORSConfig{
-		AllowOrigins: []string{os.Getenv("NGINX_HOST")},
-		AllowHeaders: []string{"Origin", "X-Requested-With", "Content-Type", "Accept", "Authorization", "ResponseType", "Cache-Control"},
-		AllowMethods: []string{http.MethodGet, http.MethodPost, http.MethodPut, http.MethodDelete, http.MethodOptions, http.MethodConnect},
+		AllowOrigins:     []string{os.Getenv("NGINX_HOST")},
+		AllowHeaders:     []string{"Origin", "X-Requested-With", "Content-Type", "Accept", "Authorization", "ResponseType", "Cache-Control"},
+		AllowMethods:     []string{http.MethodGet, http.MethodPost, http.MethodPut, http.MethodDelete, http.MethodOptions, http.MethodConnect},
 		AllowCredentials: true,
 	}))
 

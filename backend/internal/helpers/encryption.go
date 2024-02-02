@@ -64,7 +64,7 @@ func GenerateRandomKey() string {
 	key := make([]byte, 32)
 	_, err := rand.Read(key)
 	if err != nil {
-			log.Fatalf("Failed to generate random key: %s", err)
+		log.Fatalf("Failed to generate random key: %s", err)
 	}
 	return base64.StdEncoding.EncodeToString(key)
 }
