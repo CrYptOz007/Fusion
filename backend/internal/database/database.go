@@ -2,6 +2,7 @@ package database
 
 import (
 	"fmt"
+	"log"
 
 	"github.com/CrYptOz007/Fusion/internal/models/service"
 	"github.com/CrYptOz007/Fusion/internal/models/user"
@@ -36,6 +37,12 @@ func (c *Connection) Init(error chan<- error) {
 }
 
 func (c *Connection) autoMigration() {
-	c.Db.AutoMigrate(&service.Service{})
-	c.Db.AutoMigrate(&user.User{})
+	err := c.Db.AutoMigrate(&service.Service{})
+	if (err != nil) {
+		log.Fatalf("Failed to migrate service table %s", err)
+	}
+	err = c.Db.AutoMigrate(&user.User{})
+	if (err != nil) {
+		log.Fatalf("Failed to migrate user table %s", err)
+	}
 }

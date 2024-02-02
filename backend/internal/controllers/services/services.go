@@ -38,7 +38,10 @@ func CreateService(c echo.Context) error {
 		return helpers.ReturnUnexpectedError(c, []string{err.Error()})
 	}
 
-	s.BeforeCreate(database)
+	err := s.BeforeCreate(database)
+	if err != nil {
+		return helpers.ReturnUnexpectedError(c, []string{err.Error()})
+	}
 
 	serviceModel := dtoToService(s)
 
