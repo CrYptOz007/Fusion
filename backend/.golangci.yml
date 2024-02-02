@@ -1,0 +1,4 @@
+issues:
+  exclude:
+    - "could not import(.+)"
+    - "undefined: (.+)"
