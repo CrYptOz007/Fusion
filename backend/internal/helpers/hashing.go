@@ -17,10 +17,7 @@ func HashPassword(password string) (string, error) {
 
 func ComparePassword(hashedPassword, password string) bool {
 	err := bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(password))
-	if err != nil {
-		return false
-	}
-	return true
+	return err == nil
 }
 
 func GenerateSalt() (string, error) {

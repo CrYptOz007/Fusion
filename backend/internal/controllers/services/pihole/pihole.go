@@ -55,6 +55,9 @@ func GetStatus(c echo.Context) error {
 
 	// Get status from pihole
 	status, err := pihole.Status(service)
+	if err != nil {
+		return helpers.ReturnUnexpectedError(c, []string{err.Error()})
+	}
 
 	return c.JSON(200, types.Response{Data: status})
 }

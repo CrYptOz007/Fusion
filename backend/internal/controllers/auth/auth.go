@@ -31,8 +31,8 @@ func Login(c echo.Context) error {
 		return helpers.ReturnUnexpectedError(c, []string{"username does not exist"})
 	}
 
-	if err := helpers.ComparePassword(dbUser.Password, user.Password); err == false {
-		return c.JSON(http.StatusUnauthorized, types.Response{Error: []string{"invalid password"}})
+	if !helpers.ComparePassword(dbUser.Password, user.Password) {
+    return c.JSON(http.StatusUnauthorized, types.Response{Error: []string{"invalid password"}})
 	}
 
 	authToken, refreshToken, err := jwt.GenerateTokenPair(dbUser.ID, dbUser.Username)
