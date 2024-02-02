@@ -2,6 +2,7 @@ package user
 
 import (
 	"net/http"
+	"strings"
 
 	"github.com/CrYptOz007/Fusion/internal/helpers"
 	"github.com/CrYptOz007/Fusion/internal/models/user"
@@ -20,6 +21,10 @@ func Register(c echo.Context) error {
 	if err := c.Bind(u); err != nil {
 		return c.JSON(http.StatusBadRequest, types.Response{Error: []string{err.Error()}})
 	}
+
+	u.Username = strings.TrimSpace(u.Username)
+	u.Password = strings.TrimSpace(u.Password)
+
 
 	if u.Username == "" || u.Password == "" {
 		return c.JSON(http.StatusBadRequest, types.Response{Error: []string{"username and password are required"}})

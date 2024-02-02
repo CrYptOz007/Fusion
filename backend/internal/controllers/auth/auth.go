@@ -2,6 +2,7 @@ package auth
 
 import (
 	"net/http"
+	"strings"
 
 	"github.com/CrYptOz007/Fusion/internal/helpers"
 	"github.com/CrYptOz007/Fusion/internal/models/user"
@@ -22,6 +23,9 @@ func Login(c echo.Context) error {
 	if err := c.Bind(&user); err != nil {
 		return helpers.ReturnUnexpectedError(c, []string{err.Error()})
 	}
+
+	user.Username = strings.TrimSpace(user.Username)
+	user.Password = strings.TrimSpace(user.Password)
 
 	if user.Username == "" || user.Password == "" {
 		return helpers.ReturnUnexpectedError(c, []string{"username and password are required"})
