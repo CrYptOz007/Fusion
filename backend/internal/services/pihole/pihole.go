@@ -11,9 +11,14 @@ import (
 
 func sendRequest(service *service.Service, query string) (map[string]interface{}, error) {
 	url := fmt.Sprintf("http://%s:%d/admin/api.php?%s&auth=%s", service.Hostname, service.Port, query, service.ApiKey)
-	resp, error := http.Get(url)
-	if error != nil {
-		return map[string]interface{}{}, error
+	req, err := http.NewRequest(http.MethodGet, url, nil) 
+  if err != nil {
+    return map[string]interface{}{}, err
+  }
+
+	resp, err := http.DefaultClient.Do(req) 
+	if err != nil {
+		return map[string]interface{}{}, err
 	}
 
 	body, err := io.ReadAll(resp.Body)

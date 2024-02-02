@@ -2,7 +2,6 @@ package proxmox
 
 import (
 	"context"
-	"crypto/tls"
 	"fmt"
 	"net/http"
 
@@ -15,14 +14,12 @@ func ListNodes(service *service.Service) (proxmox.NodeStatuses, error) {
 	tokenID := service.Username
 	secret := service.ApiKey
 
-	insecureHTTPClient := http.Client{
-		Transport: &http.Transport{
-			TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
-		},
+	httpClient := http.Client{
+		Transport: &http.Transport{},
 	}
 
 	client := proxmox.NewClient("https://"+service.Hostname+":"+fmt.Sprintf("%d", service.Port)+"/api2/json",
-		proxmox.WithHTTPClient(&insecureHTTPClient),
+		proxmox.WithHTTPClient(&httpClient),
 		proxmox.WithAPIToken(tokenID, secret))
 
 	nodes, err := client.Nodes(context.Background())
@@ -39,14 +36,12 @@ func ListVMs(service *service.Service, node string) (proxmox.VirtualMachines, er
 	tokenID := service.Username
 	secret := service.ApiKey
 
-	insecureHTTPClient := http.Client{
-		Transport: &http.Transport{
-			TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
-		},
+	httpClient := http.Client{
+		Transport: &http.Transport{},
 	}
 
 	client := proxmox.NewClient("https://"+service.Hostname+":"+fmt.Sprintf("%d", service.Port)+"/api2/json",
-		proxmox.WithHTTPClient(&insecureHTTPClient),
+		proxmox.WithHTTPClient(&httpClient),
 		proxmox.WithAPIToken(tokenID, secret))
 
 	nodeInfo, err := client.Node(context.Background(), node)
@@ -68,14 +63,12 @@ func ListContainers(service *service.Service, node string) (proxmox.Containers, 
 	tokenID := service.Username
 	secret := service.ApiKey
 
-	insecureHTTPClient := http.Client{
-		Transport: &http.Transport{
-			TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
-		},
+	httpClient := http.Client{
+		Transport: &http.Transport{},
 	}
 
 	client := proxmox.NewClient("https://"+service.Hostname+":"+fmt.Sprintf("%d", service.Port)+"/api2/json",
-		proxmox.WithHTTPClient(&insecureHTTPClient),
+		proxmox.WithHTTPClient(&httpClient),
 		proxmox.WithAPIToken(tokenID, secret))
 
 	nodeInfo, err := client.Node(context.Background(), node)

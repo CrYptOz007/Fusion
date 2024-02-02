@@ -1,6 +1,10 @@
 package service
 
 import (
+	"fmt"
+	"net"
+	"regexp"
+
 	encryption "github.com/CrYptOz007/Fusion/internal/helpers"
 	"github.com/CrYptOz007/Fusion/internal/models/user"
 	"gorm.io/gorm"
@@ -39,6 +43,19 @@ type ServiceDTO struct {
 func (s *ServiceDTO) BeforeCreate(db *gorm.DB) (err error) {
 	if err := db.Where("ID = ?", s.UserID).First(&s.User).Error; err != nil {
 		return err
+	}
+
+	hostname := net.ParseIP(s.Hostname)
+	validDomain, _ := regexp.MatchString(`^([a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6}$`, s.Hostname)
+	if (!validDomain) {
+		return fmt.Errorf("invalid hostname: %s", s.Hostname)
+	}
+	if hostname == nil && !validDomain {
+			return fmt.Errorf("invalid hostname: %s", s.Hostname)
+	}
+
+	if s.Port < 0 || s.Port > 65535 {
+			return fmt.Errorf("invalid port: %d", s.Port)
 	}
 
 	if len(s.Password) > 0 {
