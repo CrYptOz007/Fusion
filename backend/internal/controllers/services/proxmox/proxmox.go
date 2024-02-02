@@ -1,6 +1,7 @@
 package proxmox
 
 import (
+	"net/http"
 	"strconv"
 
 	"github.com/CrYptOz007/Fusion/internal/helpers"
@@ -33,19 +34,19 @@ func GetNodes(c echo.Context) error {
 
 	parsedId, err := strconv.Atoi(id)
 	if err != nil {
-		return helpers.ReturnUnexpectedError(c, []string{err.Error()})
+		return helpers.ReturnExpectedError(c, http.StatusBadRequest, []string{"invalid query type for: id"})
 	}
 
 	// Get service from database
 	service, err := service.FetchService(parsedId, database)
 	if err != nil {
-		return helpers.ReturnUnexpectedError(c, []string{err.Error()})
+		return helpers.ReturnUnexpectedError(c)
 	}
 
 	// Get nodes from proxmox
 	nodes, err := proxmox.ListNodes(service)
 	if err != nil {
-		return helpers.ReturnUnexpectedError(c, []string{err.Error()})
+		return helpers.ReturnExpectedError(c, http.StatusBadRequest, []string{err.Error()})
 	}
 
 	// map nodes to NodeResponse
@@ -72,19 +73,19 @@ func GetVirtualMachines(c echo.Context) error {
 
 	parsedId, err := strconv.Atoi(id)
 	if err != nil {
-		return helpers.ReturnUnexpectedError(c, []string{err.Error()})
+		return helpers.ReturnExpectedError(c, http.StatusBadRequest, []string{"invalid query type for: id"})
 	}
 
 	// Get service from database
 	service, err := service.FetchService(parsedId, database)
 	if err != nil {
-		return helpers.ReturnUnexpectedError(c, []string{err.Error()})
+		return helpers.ReturnUnexpectedError(c)
 	}
 
 	// Get virtual machines from a node in proxmox
 	vms, err := proxmox.ListVMs(service, node)
 	if err != nil {
-		return helpers.ReturnUnexpectedError(c, []string{err.Error()})
+		return helpers.ReturnExpectedError(c, http.StatusBadRequest, []string{err.Error()})
 	}
 
 	// map vms to VMResponse
@@ -114,19 +115,19 @@ func GetContainers(c echo.Context) error {
 
 	parsedId, err := strconv.Atoi(id)
 	if err != nil {
-		return helpers.ReturnUnexpectedError(c, []string{err.Error()})
+		return helpers.ReturnExpectedError(c, http.StatusBadRequest, []string{"invalid query type for: id"})
 	}
 
 	// Get service from database
 	service, err := service.FetchService(parsedId, database)
 	if err != nil {
-		return helpers.ReturnUnexpectedError(c, []string{err.Error()})
+		return helpers.ReturnUnexpectedError(c)
 	}
 
 	// Get containers from a node in proxmox
 	containers, err := proxmox.ListContainers(service, node)
 	if err != nil {
-		return helpers.ReturnUnexpectedError(c, []string{err.Error()})
+		return helpers.ReturnExpectedError(c, http.StatusBadRequest, []string{err.Error()})
 	}
 
 	// map containers to VMResponse

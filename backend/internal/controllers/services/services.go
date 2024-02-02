@@ -35,19 +35,18 @@ func CreateService(c echo.Context) error {
 	s := new(service.ServiceDTO)
 
 	if err := c.Bind(s); err != nil {
-		return helpers.ReturnUnexpectedError(c, []string{err.Error()})
+		return helpers.ReturnExpectedError(c, http.StatusBadRequest, []string{err.Error()})
 	}
 
 	err := s.BeforeCreate(database)
 	if err != nil {
-		return helpers.ReturnUnexpectedError(c, []string{err.Error()})
+		return helpers.ReturnUnexpectedError(c)
 	}
 
 	serviceModel := dtoToService(s)
 
 	if err := database.Create(serviceModel).Error; err != nil {
-		e := append(e, "unable to create service")
-		return helpers.ReturnUnexpectedError(c, e)
+		return helpers.ReturnExpectedError(c, http.StatusConflict, []string{"unable to create service"})
 	}
 
 	return c.JSON(http.StatusCreated, types.Response{Error: e})
@@ -60,7 +59,7 @@ func GetServices(c echo.Context) error {
 	var services []service.Service
 
 	if err := database.Find(&services).Error; err != nil {
-		return err
+		return helpers.ReturnUnexpectedError(c)
 	}
 
 	return c.JSON(http.StatusOK, types.Response{Data: services})

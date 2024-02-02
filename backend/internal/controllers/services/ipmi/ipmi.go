@@ -1,6 +1,7 @@
 package ipmi
 
 import (
+	"net/http"
 	"strconv"
 
 	"github.com/CrYptOz007/Fusion/internal/helpers"
@@ -18,18 +19,18 @@ func GetInfo(c echo.Context) error {
 
 	parsedId, err := strconv.Atoi(id)
 	if err != nil {
-		return helpers.ReturnUnexpectedError(c, []string{err.Error()})
+		return helpers.ReturnExpectedError(c, http.StatusBadRequest, []string{"invalid query type for: id"})
 	}
 
 	// Get service from database
 	service, err := service.FetchService(parsedId, database)
 	if err != nil {
-		return helpers.ReturnUnexpectedError(c, []string{err.Error()})
+		return helpers.ReturnUnexpectedError(c)
 	}
 
 	client, err := ipmitool.NewClient(service.Hostname, uint16(service.Port), service.Username, service.Password)
 	if err != nil {
-		return helpers.ReturnUnexpectedError(c, []string{err.Error()})
+		return helpers.ReturnExpectedError(c, http.StatusBadGateway, []string{err.Error()})
 	}
 
 	info := client.GetInfo()

@@ -1,6 +1,7 @@
 package pihole
 
 import (
+	"net/http"
 	"strconv"
 
 	"github.com/CrYptOz007/Fusion/internal/helpers"
@@ -19,19 +20,19 @@ func GetSummary(c echo.Context) error {
 
 	parsedId, err := strconv.Atoi(id)
 	if err != nil {
-		return helpers.ReturnUnexpectedError(c, []string{err.Error()})
+		return helpers.ReturnExpectedError(c, http.StatusBadRequest, []string{"invalid query type for: id"})
 	}
 
 	// Get service from database
 	service, err := service.FetchService(parsedId, database)
 	if err != nil {
-		return helpers.ReturnUnexpectedError(c, []string{err.Error()})
+		return helpers.ReturnUnexpectedError(c)
 	}
 
 	// Get summary from pihole
 	summary, err := pihole.Summary(service)
 	if err != nil {
-		return helpers.ReturnUnexpectedError(c, []string{err.Error()})
+		return helpers.ReturnExpectedError(c, http.StatusBadGateway, []string{err.Error()})
 	}
 
 	return c.JSON(200, types.Response{Data: summary})
@@ -44,19 +45,19 @@ func GetStatus(c echo.Context) error {
 
 	parsedId, err := strconv.Atoi(id)
 	if err != nil {
-		return helpers.ReturnUnexpectedError(c, []string{err.Error()})
+		return helpers.ReturnExpectedError(c, http.StatusBadRequest, []string{"invalid query type for: id"})
 	}
 
 	// Get service from database
 	service, err := service.FetchService(parsedId, database)
 	if err != nil {
-		return helpers.ReturnUnexpectedError(c, []string{err.Error()})
+		return helpers.ReturnUnexpectedError(c)
 	}
 
 	// Get status from pihole
 	status, err := pihole.Status(service)
 	if err != nil {
-		return helpers.ReturnUnexpectedError(c, []string{err.Error()})
+		return helpers.ReturnExpectedError(c, http.StatusBadGateway, []string{err.Error()})
 	}
 
 	return c.JSON(200, types.Response{Data: status})
@@ -69,13 +70,13 @@ func Disable(c echo.Context) error {
 
 	parsedId, err := strconv.Atoi(id)
 	if err != nil {
-		return helpers.ReturnUnexpectedError(c, []string{err.Error()})
+		return helpers.ReturnExpectedError(c, http.StatusBadRequest, []string{"invalid query type for: id"})
 	}
 
 	// Get service from database
 	service, err := service.FetchService(parsedId, database)
 	if err != nil {
-		return helpers.ReturnUnexpectedError(c, []string{err.Error()})
+		return helpers.ReturnUnexpectedError(c)
 	}
 
 	// Disable pihole
@@ -91,13 +92,13 @@ func Enable(c echo.Context) error {
 
 	parsedId, err := strconv.Atoi(id)
 	if err != nil {
-		return helpers.ReturnUnexpectedError(c, []string{err.Error()})
+		return helpers.ReturnExpectedError(c, http.StatusBadRequest, []string{"invalid query type for: id"})
 	}
 
 	// Get service from database
 	service, err := service.FetchService(parsedId, database)
 	if err != nil {
-		return helpers.ReturnUnexpectedError(c, []string{err.Error()})
+		return helpers.ReturnUnexpectedError(c)
 	}
 
 	// Enable pihole

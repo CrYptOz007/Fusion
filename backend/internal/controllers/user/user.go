@@ -36,13 +36,13 @@ func Register(c echo.Context) error {
 
 	hashedPassword, err := helpers.HashPassword(u.Password)
 	if err != nil {
-		return helpers.ReturnUnexpectedError(c, []string{err.Error()})
+		return helpers.ReturnUnexpectedError(c)
 	}
 	u.Password = hashedPassword
 
 	u.Salt, err = helpers.GenerateSalt()
 	if err != nil {
-		return helpers.ReturnUnexpectedError(c, []string{err.Error()})
+		return helpers.ReturnUnexpectedError(c)
 	}
 
 	database.Create(u)
