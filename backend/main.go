@@ -29,8 +29,16 @@ func main() {
 
 	errors := make(chan error)
 
-	os.Setenv("AUTH_KEY", helpers.GenerateRandomKey())
-	os.Setenv("REFRESH_KEY", helpers.GenerateRandomKey())
+	errs := os.Setenv("AUTH_KEY", helpers.GenerateRandomKey())
+	if errs != nil {
+		log.Fatal("Failed to generate auth key")
+		os.Exit(1)
+	}
+	errs = os.Setenv("REFRESH_KEY", helpers.GenerateRandomKey())
+	if errs != nil {
+		log.Fatal("Failed to generate refresh key")
+		os.Exit(1)
+	}
 
 	go connection.Init(errors)
 	fmt.Println("Waiting for database connection to be initialized")
