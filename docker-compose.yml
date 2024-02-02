@@ -1,4 +1,4 @@
-version: '3.9'
+version: "3.9"
 services:
   backend:
     container_name: backend_service
@@ -7,11 +7,19 @@ services:
       dockerfile: ./docker/Dockerfile
     volumes:
       - ./backend:/var/www/app/backend
-    ports: 
+    env_file:
+      - .env
+    ports:
       - "3000:3000"
     depends_on:
       - backend_db
-    
+    healthcheck:
+      test: ["CMD", "curl", "http://localhost:3000/api/test"]
+      start_period: 10s
+      interval: 5s
+      timeout: 10s
+      retries: 5
+
   backend_db:
     container_name: backend_db
     image: mariadb:10.5
@@ -28,11 +36,27 @@ services:
     build:
       context: ./frontend
       dockerfile: ./docker/Dockerfile
+    env_file:
+      - .env
     volumes:
       - ./frontend:/var/www/app/frontend
+      - /var/www/app/frontend/node_modules
     ports:
       - "4000:4000"
-    
+
+  web_proxy:
+    container_name: web_proxy
+    build: ./nginx
+    ports:
+      - ${NGINX_PORT}:${NGINX_PORT}
+    depends_on:
+      backend:
+        condition: service_healthy
+    volumes:
+      - ./nginx/default.conf.template:/etc/nginx/templates/default.conf.template
+    env_file:
+      - .env
+
 networks:
   default:
     name: fusion
