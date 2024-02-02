@@ -9,14 +9,14 @@
 	let username = '';
 	let password = '';
 	let confirmPassword = '';
-	let formError = ''
+	let formError = '';
 
 	$: validations = [
 		password.length > 4 ? 1 : 0,
 		password.length >= 8 ? 3 : 0,
 		(password.match(/[A-Z]/)?.length || 0) * 2,
 		(password.match(/[0-9]/)?.length || 0) * 2,
-		password.match(/[&!@#$%^*]/) ? 2 : 0
+		password.match(/[&!@#$%^*]/)?.length ? 2 : 0
 	];
 	$: validated = validations[1] && validations[2] && validations[3];
 	$: strength = validations.reduce((acc, curr) => acc + curr, 0);
@@ -31,12 +31,11 @@
 			$login.mutate();
 		},
 		onError: (error) => {
-			if(axios.isAxiosError(error)) {
-				formError = error.response?.data.error[0]
+			if (axios.isAxiosError(error)) {
+				formError = error.response?.data.error[0];
 			}
 		}
 	});
-	
 
 	const login = useMutation(() => useLogin(formData), {
 		onSuccess: (data) => {
@@ -112,8 +111,7 @@
 					color="white"
 				/>{:else}Next{/if}</Button
 		>
-		{#if $register.isError}<Helper color="red"
-				><span class="font-medium">{formError}</span></Helper
+		{#if $register.isError}<Helper color="red"><span class="font-medium">{formError}</span></Helper
 			>{/if}
 	</form>
 </Card>

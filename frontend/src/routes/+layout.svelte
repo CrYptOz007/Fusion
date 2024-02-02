@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 	import '../app.pcss';
 	import { Navbar, NavBrand } from 'flowbite-svelte';
 	import { QueryClient, QueryClientProvider } from '@sveltestack/svelte-query';

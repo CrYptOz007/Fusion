@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 	import { Button, Progressbar } from 'flowbite-svelte';
 	import { count as step } from '$lib/stores';
 </script>
