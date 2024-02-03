@@ -91,7 +91,7 @@
 			</ul>
 		</div>
 		<div class="flex w-full flex-col space-y-2">
-			<Label for="password">Confirm Password</Label>
+			<Label for="confirm-password">Confirm Password</Label>
 			<Input
 				color={`${confirmPassword.length == 0 ? 'base' : passwordMatch ? 'green' : 'red'}`}
 				bind:value={confirmPassword}

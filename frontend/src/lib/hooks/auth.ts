@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const useRegister = async (formData: URLSearchParams) => {
 	const response = await axios.post(
-		'http://localhost:8080/api/user/register',
+		'/api/user/register',
 		{
 			username: formData.get('username'),
 			password: formData.get('password')
@@ -18,7 +18,7 @@ const useRegister = async (formData: URLSearchParams) => {
 
 const useLogin = async (formData: URLSearchParams) => {
 	const response = await axios.post(
-		'http://localhost:8080/api/auth/login',
+		'/api/auth/login',
 		{
 			username: formData.get('username'),
 			password: formData.get('password')
