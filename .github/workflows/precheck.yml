@@ -1,9 +1,7 @@
 name: CI Precheck
 
 on:
-  push:
-    branches-ignore:
-      - main
+  workflow_call:
 
 jobs:
   eslint:
