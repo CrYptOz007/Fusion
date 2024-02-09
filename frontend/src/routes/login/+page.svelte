@@ -13,9 +13,9 @@
 		username: username,
 		password: password
 	});
-  $: if($authStore) {
-    goto('/dashboard');
-  }
+	$: if ($authStore) {
+		goto('/dashboard');
+	}
 
 	const login = useMutation(() => useLogin(formData), {
 		onSuccess: (data) => {
@@ -34,7 +34,6 @@
 		e.preventDefault();
 		$login.mutate();
 	}
-  
 </script>
 
 {#await authStore.isLoggedIn()}
