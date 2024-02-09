@@ -38,4 +38,9 @@ const useRefresh = async () => {
 	return response;
 };
 
-export { useRegister, useLogin, useRefresh };
+const useLogout = async () => {
+	const response = await axios.get('/api/auth/logout');
+	return response;
+};
+
+export { useRegister, useLogin, useRefresh, useLogout };
