@@ -20,6 +20,7 @@ func Register(app *echo.Echo, groups types.Groups) {
 		r.Group("/services", middlewares.Protected, func(r *Router) {
 			r.GET("", services.GetServices)
 			r.POST("/create", services.CreateService)
+			r.GET("/ping", services.PingService)
 
 			r.GET("/proxmox/nodes", proxmox.GetNodes)
 			r.GET("/proxmox/virtualmachines", proxmox.GetVirtualMachines)

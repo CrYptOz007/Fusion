@@ -115,3 +115,14 @@ func validateToken(tokenString string, key []byte) (jwt.MapClaims, error) {
 
 	return claims, nil
 }
+
+func GetUserIdFromToken(tokenString string) (uint, error) {
+	claims, err := ValidateAuthToken(tokenString)
+	if err != nil {
+		return 0, err
+	}
+
+	id := claims["id"].(float64)
+
+	return uint(id), nil
+}
