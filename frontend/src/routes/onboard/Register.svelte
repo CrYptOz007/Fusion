@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { count as step } from '$lib/stores';
+	import { authStore, count as step } from '$lib/stores';
 	import { Card, Label, Input, Button, Progressbar, Helper, Spinner } from 'flowbite-svelte';
 	import { useRegister, useLogin } from '$lib/hooks/auth';
 	import { useMutation } from '@sveltestack/svelte-query';
@@ -40,7 +40,7 @@
 	const login = useMutation(() => useLogin(formData), {
 		onSuccess: (data) => {
 			sessionStorage.setItem('token', data.token);
-
+			authStore.login();
 			step.increment();
 		}
 	});
@@ -55,7 +55,7 @@
 </script>
 
 <Card>
-	<form class="flex flex-col space-y-6" on:submit={handleRegister}>
+	<form class="flex flex-col space-y-6 px-5 py-5" on:submit={handleRegister}>
 		<h3 class="text-xl font-black dark:text-white">Create your admin account</h3>
 		<div class="flex w-full flex-col space-y-2">
 			<Label for="username">Username</Label>

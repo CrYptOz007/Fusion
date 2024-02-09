@@ -5,6 +5,7 @@
 	import { slide, fade, fly } from 'svelte/transition';
 	import Register from './Register.svelte';
 	import Steps from './Steps.svelte';
+	import { goto } from '$app/navigation';
 </script>
 
 <div class="flex flex-col space-y-10">
@@ -32,13 +33,15 @@
 		</div>
 	{:else}
 		<div in:fly={{ x: -200, duration: 500, delay: 100 }}>
-			<Card class="flex flex-col items-center space-y-6 text-center">
+			<Card class="flex flex-col items-center space-y-6 px-5 py-5 text-center">
 				<h1 class="text-4xl font-black dark:text-white">Congratulations!</h1>
 				<h3 class="text-l font-medium dark:text-white">
 					You're ready to go. Let's go to the dashboard and start adding some applications
 				</h3>
 				<div in:fade={{ duration: 1000 }}>
-					<Button color="primary" size="lg" on:click={step.increment}>Go to Dashboard</Button>
+					<Button color="primary" size="lg" on:click={() => goto('/dashboard')}
+						>Go to Dashboard</Button
+					>
 				</div>
 			</Card>
 		</div>

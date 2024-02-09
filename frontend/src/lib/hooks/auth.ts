@@ -33,4 +33,9 @@ const useLogin = async (formData: URLSearchParams) => {
 	return response.data;
 };
 
-export { useRegister, useLogin };
+const useRefresh = async () => {
+	const response = await axios.get('/api/auth/refresh');
+	return response;
+};
+
+export { useRegister, useLogin, useRefresh };

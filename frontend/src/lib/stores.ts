@@ -1,14 +1,7 @@
 import { writable } from 'svelte/store';
-
-const createTokenStore = () => {
-	const { subscribe, set, update } = writable('');
-
-	return {
-		subscribe,
-		set: (k: string) => update((k) => k + 1),
-		reset: () => set('')
-	};
-};
+import api from '$lib/middlewares/api';
+import axios from 'axios';
+import { useRefresh } from './hooks/auth';
 
 const createErrorStore = () => {
 	const { subscribe, set } = writable('');
@@ -17,6 +10,25 @@ const createErrorStore = () => {
 		subscribe,
 		set: (k: string) => set(k),
 		reset: () => set('')
+	};
+};
+
+const createAuthStore = () => {
+	const { subscribe, set } = writable(false);
+
+	return {
+		subscribe,
+		login: () => set(true),
+		logout: () => set(false),
+		isLoggedIn: async () => {
+			const response = await useRefresh();
+			if (response.status === 200 && response.data.token) {
+				sessionStorage.setItem('authToken', response.data.token);
+				set(true);
+			} else {
+				set(false);
+			}
+		}
 	};
 };
 
@@ -33,6 +45,6 @@ const createCount = () => {
 
 export const count = createCount();
 
-export const tokenStore = createTokenStore();
+export const authStore = createAuthStore();
 
 export const errorStore = createErrorStore();
