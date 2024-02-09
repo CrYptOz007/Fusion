@@ -27,17 +27,17 @@ type Service struct {
 
 type ServiceDTO struct {
 	gorm.Model
-	Name        string    `json:"name" gorm:"not null"`
-	Type        string    `gorm:"not null" json:"type"`
-	Description *string   `json:"description"`
-	Hostname    string    `gorm:"uniqueIndex:idx_hostname_port" json:"hostname"`
-	Port        int       `gorm:"type:int(5);uniqueIndex:idx_hostname_port" json:"port"`
-	ApiKey      string    `json:"api_key"`
-	Username    string    `json:"username"`
-	Password    string    `json:"password"`
+	Name        string    `json:"name" gorm:"not null" form:"name"`
+	Type        string    `gorm:"not null" json:"type" form:"type"`
+	Description *string   `json:"description" form:"type"`
+	Hostname    string    `gorm:"uniqueIndex:idx_hostname_port" json:"hostname" form:"hostname"`
+	Port        int       `gorm:"type:int(5);uniqueIndex:idx_hostname_port" json:"port" form:"port"`
+	ApiKey      string    `json:"api_key" form:"api_key"`
+	Username    string    `json:"username" form:"username"`
+	Password    string    `json:"password" form:"password"`
 	UserID      int       `gorm:"not null" json:"user_id"`
 	User        user.User `gorm:"constraint:OnUpdate:CASCADE;foreignKey:UserID" json:"-"`
-	Icon        string    `json:"icon"`
+	Icon        string    `json:"icon" form:"icon"`
 }
 
 func (s *ServiceDTO) BeforeCreate(db *gorm.DB) (err error) {
