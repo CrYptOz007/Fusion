@@ -14,7 +14,7 @@
 	});
 	let runningVMs: any;
 	let runningContainers: any;
-  
+
 	$: if ($vms.isSuccess) {
 		runningVMs = $vms.data.filter((vm: { status: string }) => vm.status === 'running').length;
 	}

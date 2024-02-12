@@ -2,7 +2,7 @@
 	import type { Service } from '$lib/models/service';
 	import { Card } from 'flowbite-svelte';
 	import { useQuery } from '@sveltestack/svelte-query';
-  
+
 	export let data: Service;
 	export let stats: any = null;
 	export let actionButton: any = null;

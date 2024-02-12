@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { getServices } from '$lib/hooks/services';
 	import { useQuery } from '@sveltestack/svelte-query';
-	import { P, Spinner } from 'flowbite-svelte';
+	import { Spinner } from 'flowbite-svelte';
 	import { GenericService, Service } from '../../lib/models/service';
 	import GenericCard from './components/GenericCard.svelte';
 	import Proxmox from './components/Proxmox.svelte';
@@ -23,10 +23,10 @@
 		<Spinner size="10" color="primary" />
 	</main>
 {:else if $servicesQuery.isSuccess}
-	<main class="grid grid-flow-dense gap-6 p-4 md:p-16 grid-cols-1 sm:grid-cols-2 xl:grid-cols-3">
+	<main class="grid grid-flow-dense grid-cols-1 gap-6 p-4 sm:grid-cols-2 md:p-16 xl:grid-cols-3">
 		{#each data as service}
 			<div
-				class="card w-full relative col-span-1 {service.serviceType instanceof GenericService
+				class="card relative col-span-1 w-full {service.serviceType instanceof GenericService
 					? 'row-span-1'
 					: 'row-span-2'} flex"
 			>
