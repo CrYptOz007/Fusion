@@ -1,6 +1,4 @@
 import { writable } from 'svelte/store';
-import api from '$lib/middlewares/api';
-import axios from 'axios';
 import { useRefresh } from './hooks/auth';
 
 const createErrorStore = () => {
@@ -43,8 +41,20 @@ const createCount = () => {
 	};
 };
 
+const createDarkMode = () => {
+	const { subscribe, set, update } = writable(true);
+
+	return {
+		subscribe,
+		toggle: () => update((n) => !n),
+		set: (k: boolean) => set(k)
+	};
+};
+
 export const count = createCount();
 
 export const authStore = createAuthStore();
 
 export const errorStore = createErrorStore();
+
+export const darkMode = createDarkMode();

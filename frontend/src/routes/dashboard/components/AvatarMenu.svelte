@@ -3,6 +3,7 @@
 	import { UserOutline } from 'flowbite-svelte-icons';
 	import { useLogout } from '$lib/hooks/auth';
 	import { useMutation } from '@sveltestack/svelte-query';
+	import { darkMode } from '$lib/stores';
 
 	const logout = useMutation(useLogout, {
 		onSuccess: () => {
@@ -12,7 +13,7 @@
 	});
 </script>
 
-<Button class="avatar" color="dark" size="lg"><UserOutline /></Button>
+<Button class="avatar" color={$darkMode ? 'dark' : 'alternative'} size="lg"><UserOutline /></Button>
 <Dropdown triggeredBy=".avatar">
 	<DropdownItem
 		slot="footer"
