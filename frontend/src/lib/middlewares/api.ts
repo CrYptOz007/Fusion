@@ -11,7 +11,7 @@ const api = axios.create({
 
 api.interceptors.request.use(
 	async (config) => {
-		const authToken = sessionStorage.getItem('authToken');
+		const authToken = sessionStorage.getItem('token');
 		if (authToken) {
 			config.headers.Authorization = `Bearer ${authToken}`;
 		}
@@ -33,11 +33,11 @@ api.interceptors.request.use(
 			try {
 				console.log('trying');
 				const response = await axios.get('/api/auth/refresh');
-				sessionStorage.setItem('authToken', response.data.token);
+				sessionStorage.setItem('token', response.data.token);
 				authStore.login();
 				return api.request(error.config);
 			} catch (e) {
-				sessionStorage.removeItem('authToken');
+				sessionStorage.removeItem('token');
 				console.log('am i logging out');
 				authStore.logout();
 			}
