@@ -45,7 +45,10 @@ export class Service {
 	}
 
 	public goToService(): void {
-		window.open(`http://${this.hostname}:${this.port}`);
+		if (this.port === 80) window.open(`http://${this.hostname}`);
+		else {
+			window.open(`https://${this.hostname}:${this.port}`);
+		}
 	}
 }
 
@@ -59,25 +62,25 @@ abstract class ServiceType {
 	public abstract executePing(): Promise<boolean>;
 }
 
-class GenericService extends ServiceType {
+export class GenericService extends ServiceType {
 	public async executePing(): Promise<boolean> {
 		return (await pingService(this.id)).status === 200;
 	}
 }
 
-class ProxmoxService extends ServiceType {
+export class ProxmoxService extends ServiceType {
 	public async executePing(): Promise<boolean> {
 		return (await proxmox.getNodes(this.id)).status === 200;
 	}
 }
 
-class PiholeService extends ServiceType {
+export class PiholeService extends ServiceType {
 	public async executePing(): Promise<boolean> {
 		return (await pihole.getSummary(this.id)).status === 200;
 	}
 }
 
-class IpmiService extends ServiceType {
+export class IpmiService extends ServiceType {
 	public async executePing(): Promise<boolean> {
 		return (await ipmi.getInfo(this.id)).status === 200;
 	}
