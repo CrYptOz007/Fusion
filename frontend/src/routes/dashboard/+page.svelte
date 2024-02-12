@@ -1,23 +1,21 @@
 <script lang="ts">
 	import { getServices } from '$lib/hooks/services';
 	import { useQuery } from '@sveltestack/svelte-query';
-	import { Card, Spinner } from 'flowbite-svelte';
-	import { Service } from '../../lib/models/service';
+	import { P, Spinner } from 'flowbite-svelte';
+	import { GenericService, Service } from '../../lib/models/service';
+	import GenericCard from './components/GenericCard.svelte';
+	import Proxmox from './components/Proxmox.svelte';
+	import Pihole from './components/Pihole.svelte';
+	import PiholeEnableButton from './components/PiholeEnableButton.svelte';
 
 	const servicesQuery = useQuery('services', getServices, {
-		retry: true,
-		refetchInterval: 5000,
-		refetchOnMount: true,
-		refetchOnReconnect: true,
-		refetchOnWindowFocus: true
+		refetchInterval: 5000
 	});
 
 	let data: Service[] = [];
 	$: if ($servicesQuery.isSuccess) {
 		data = $servicesQuery.data.data.map((service: any) => new Service(service));
 	}
-
-	$: console.log(data);
 </script>
 
 {#if $servicesQuery.isLoading}
@@ -25,29 +23,20 @@
 		<Spinner size="10" color="primary" />
 	</main>
 {:else if $servicesQuery.isSuccess}
-	<main class="grid gap-4 p-16 lg:grid-cols-3 xl:grid-cols-4">
+	<main class="grid grid-flow-dense gap-6 p-4 md:p-16 grid-cols-1 sm:grid-cols-2 xl:grid-cols-3">
 		{#each data as service}
-			<div class="card relative col-span-1 flex">
-				<Card class="shrink-0 flex-grow" on:click={() => service.goToService()}>
-					<div class="flex gap-4">
-						<div class="flex-none">
-							<img src={service.icon} alt={service.name} class="h-16 w-16" />
-						</div>
-						<div class="flex-grow">
-							<h3 class="text-lg font-semibold">{service.name}</h3>
-							<p>{service.type}</p>
-						</div>
-					</div>
-				</Card>
-				{#await service.serviceType.executePing() then online}
-					{#if online}
-						<div class={`absolute right-0 h-full w-4 flex-none rounded-r-lg bg-green-500`}></div>
-					{:else}
-						<div class={`absolute right-0 h-full w-4 flex-none rounded-r-lg bg-red-500`}></div>
-					{/if}
-				{:catch}
-					<div class={`absolute right-0 h-full w-4 flex-none rounded-r-lg bg-red-500`}></div>
-				{/await}
+			<div
+				class="card w-full relative col-span-1 {service.serviceType instanceof GenericService
+					? 'row-span-1'
+					: 'row-span-2'} flex"
+			>
+				{#if service.type === 'proxmox'}
+					<GenericCard stats={Proxmox} data={service} />
+				{:else if service.type === 'pihole'}
+					<GenericCard stats={Pihole} actionButton={PiholeEnableButton} data={service} />
+				{:else}
+					<GenericCard data={service} />
+				{/if}
 			</div>
 		{/each}
 	</main>
@@ -59,7 +48,7 @@
 	}
 
 	.card:hover {
-		transform: scale(1.05);
+		transform: scale(1.02);
 		cursor: pointer;
 	}
 </style>
